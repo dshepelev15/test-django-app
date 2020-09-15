@@ -1,0 +1,2 @@
+class InvalidTransferException(Exception):
+    pass

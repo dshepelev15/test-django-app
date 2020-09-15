@@ -1,0 +1,18 @@
+FROM python:3.7
+
+WORKDIR /src
+
+COPY pyproject.toml poetry.lock ./
+
+RUN pip install pip --upgrade && \
+    pip install poetry==1.0.2 && \
+    poetry config virtualenvs.create false --local && \
+    poetry install --no-interaction --no-dev
+
+RUN useradd app
+
+COPY . .
+
+CMD python manage.py collectstatic --noinput && \
+    python manage.py migrate && \
+    gunicorn --workers 4 --bind 0.0.0.0:8000 --log-level info --timeout 300 project.wsgi

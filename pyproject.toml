@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "currency_project"
+version = "0.1.0"
+description = ""
+authors = ["Dmitry Shepelev <dmitryshepelev15@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+django = "==2.1.7"
+djangorestframework = "==3.9.1"
+psycopg2-binary = "==2.8.5"
+celery = "^4.4.7"
+gunicorn = "==19.9.0"
+
+
+[tool.poetry.dev-dependencies]
+black = "^20.8b1"
+isort = "^5.5.2"

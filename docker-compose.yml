@@ -1,0 +1,44 @@
+version: "3.4"
+
+x-build_common: &build_common
+  env_file:
+    - .env
+  environment:
+    - POSTGRES_HOSTNAME=db
+    - RABBIT_HOST=rabbit
+  restart: always
+  depends_on:
+    - db
+    - rabbit
+  links:
+    - db
+    - rabbit
+
+services:
+  db:
+    image: postgres:12
+    env_file:
+      - .env
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - ./volumes/db:/var/lib/postgresql/data
+  rabbit:
+    image: rabbitmq:3-management
+    ports:
+      - 5672:5672
+    volumes:
+      - ./volumes/rabbitmq:/var/lib/rabbitmq/mnesia/rabbit@app-rabbitmq:cached
+  web:
+    <<: *build_common
+    build:
+      context: .
+      dockerfile: ./dockerfiles/Dockerfile_web
+    ports:
+      - 8000:8000
+  celery:
+    <<: *build_common
+    build:
+      context: .
+      dockerfile: ./dockerfiles/Dockerfile_celery
